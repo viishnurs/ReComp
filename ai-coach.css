@@ -11,6 +11,7 @@
 #cchat .msg.u{background:color-mix(in srgb,var(--lime) 12%,var(--bg3));border-color:var(--lime)}
 #cchips{gap:7px;margin:12px 0}#cchips button{border-radius:14px;font-size:12px;min-height:34px;text-align:left}
 #rc4-clear{justify-self:start;font-size:12px;min-height:34px}
-#side #rc4-nav{display:flex!important;order:5!important}
-#side .nv[data-p=discover]{display:none!important}
-#side .nv[data-p=prefs]{order:6!important}
+/* Keep the genuine Discover tab visible; AI Coach remains accessible from the Home/Nutrition shortcuts. */
+#side #rc4-nav{display:none!important}
+#side .nv[data-p="discover"]{display:flex!important;order:5!important}
+#side .nv[data-p="prefs"]{order:6!important}

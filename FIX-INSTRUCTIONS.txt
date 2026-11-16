@@ -1,0 +1,10 @@
+ReComp Discover actual fix (v5.2)
+
+Cause: ai-coach.css was hiding Discover and displaying a cloned AI Coach button in its place.
+
+Replace exactly these THREE root files in GitHub repository viishnurs/ReComp:
+- ai-coach.css
+- ai-coach.js
+- sw.js
+
+Do not upload the ZIP itself. Commit replacements, check Actions for successful Pages deployment, then refresh https://viishnurs.github.io/ReComp/ in iPhone Safari and reopen the Home Screen app. Existing saved logs are untouched. AI Coach is available through Home shortcut or Nutrition page.

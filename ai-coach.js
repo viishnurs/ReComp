@@ -15,7 +15,7 @@ $('rc4-endpoint').addEventListener('change',()=>{const url=$('rc4-endpoint').val
 $('rc4-token').addEventListener('input',e=>accessToken=e.target.value.trim());
 $('rc4-share').addEventListener('change',()=>{$('rc4-preview').textContent=$('rc4-share').checked?'Each question sends your current calorie/protein targets and the previous 7 days of calories, protein, water, steps, workouts and weigh-ins. Names, meal details, notes, photos and measurements are excluded.':'No tracker data is sent unless checked.'});
 $('rc4-clear').onclick=()=>{if(!confirm('Clear AI conversation history stored on this device?'))return;messages=[];persist();reloadChat();};
-const nav=document.querySelector('#side .nv[data-p="discover"]');if(nav){const clone=nav.cloneNode(true);clone.id='rc4-nav';clone.dataset.p='coach';clone.title='AI Coach';const tx=clone.querySelector('.tx');if(tx)tx.textContent='AI Coach';clone.onclick=()=>{location.hash='coach'};nav.parentNode.insertBefore(clone,nav);}
+// Do not replace the Discover tab with AI Coach; the app already links to #coach.
 // Existing ReComp code already provides handlers for send, enter and suggested questions via ask().
 reloadChat();}
 async function ask(question){const input=$('cq'),err=$('cerr'),send=$('csend');if(busy)return;const q=String(question||'').trim();if(!q)return;if(q.length>1800){err.textContent='Please keep the question under 1,800 characters.';return;}

@@ -1,0 +1,12 @@
+/* ReComp v11 nutrition review */
+.rc11-hint{margin:9px 0 0;font-size:12px;line-height:1.5}
+.rc11-review{border-radius:17px;padding:14px;margin-top:14px}
+.rc11-review h3{margin:0 0 8px;font-size:17px}
+.rc11-review p{font-size:12px;line-height:1.5;margin:8px 0}
+.rc11-name{margin:12px 0}
+.rc11-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.rc11-field{min-width:0}.rc11-field label{font-size:11px;display:block;margin-bottom:4px}
+.rc11-field input{font-size:16px;min-width:0;width:100%}
+.rc11-review .two{margin-top:14px;display:flex;gap:8px}
+.rc11-review .two button{flex:1;padding:8px;font-size:12px;line-height:1.25}
+@media (max-width:360px){.rc11-grid{gap:6px}.rc11-review{padding:10px}}

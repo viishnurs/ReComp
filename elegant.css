@@ -1,4 +1,4 @@
-/* ReComp 6 / Elegant: additive visual layer; keeps existing tracking modules intact. */
+/* ReComp v8 / Motivation restored. Retains original Appearance palettes. */
 :root{--e-accent:#a6b8ff;--e-accent2:#7e8fff;--e-glow:rgba(107,134,249,.18);--e-warm:#f3ddae;--e-hero-a:color-mix(in srgb,var(--lime) 42%,#0d1728);--e-hero-b:color-mix(in srgb,var(--lime) 8%,#101626);--e-card-shadow:0 20px 60px -42px rgba(15,21,55,.65);--e-hero-ink:#fff;--e-hero-sub:#d2dcf7}
 html{scroll-behavior:smooth}
 body{background:var(--bg)!important}
@@ -9,6 +9,7 @@ body{background:var(--bg)!important}
 #side .nv.on:before{background:var(--lime)!important}
 .btn.pri{background:linear-gradient(120deg,var(--lime),var(--e-accent2))!important;border:0!important}
 input,select,textarea{border-radius:14px!important}
+/* v5 Home injection is not loaded; the v8 Home is the only motivation section. */
 #rc5-home{display:none!important}
 /* Our new home and profile enhancements */
 #rc6-home{grid-column:1/-1!important;order:-1002!important;display:none;min-width:0}

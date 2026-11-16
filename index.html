@@ -934,7 +934,7 @@ function renderQuest(T,ST,k){
 function buildSide(){
   var sd=$("side");sd.innerHTML='<div class="brand"><span class="logo">'+ic("flame",22)+'</span><span class="tx">Recomp</span></div>';
   PAGES.forEach(function(x,i){if(i===7){var q=document.createElement("div");q.className="sep tx";q.textContent="More";sd.appendChild(q)}
-    var b=document.createElement("button");b.className="nv";b.dataset.p=x[0];b.title=x[1];b.innerHTML=ic(x[2])+'<span class="tx">'+x[1]+'</span><span class="pill" id="pl-'+x[0]+'"></span>';b.onclick=function(){nav(x[0])};sd.appendChild(b)});
+    var b=document.createElement("button");b.className="nv";b.dataset.p=x[0];b.title=x[1];b.innerHTML=ic(x[2])+'<span class="tx">'+x[1]+'</span><span class="pill" id="pl-'+x[0]+'"></span>';b.onclick=function(e){e.preventDefault();var destination=x[0];if(location.hash.slice(1)===destination){go(destination)}else{location.hash=destination}};sd.appendChild(b)});
   var f=document.createElement("div");f.className="sfoot";
   f.innerHTML='<div class="lvc"><div class="row"><b id="lvn">Level 1</b><span class="sub" id="lvc">0 coins</span></div><div class="bar v"><i id="lvb" style="width:0"></i></div><div class="sub" id="lvt"></div></div><div class="prof"><div class="av" id="pav">H</div><div class="tx"><b id="pnm"></b><span class="sub" id="prk"></span></div></div><div class="tb"><button class="sq" id="thm" aria-label="Switch between dark and light mode">'+ic("sun")+'</button><button class="sq" id="colb" aria-label="Collapse or expand the sidebar">'+ic("chev")+'</button></div>';
   sd.appendChild(f);
@@ -947,7 +947,7 @@ function go(p){
   document.querySelectorAll(".nv").forEach(function(b){var on=b.dataset.p===p;b.className="nv"+(on?" on":"");if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
   updTop();$("side").className="";$("scrim").className="";if(p==="prefs")$("setup").open=true;window.scrollTo(0,0)
 }
-function route(){var h=location.hash.slice(1),mini=h==="targets";document.body.classList.toggle("mini",mini);go(mini?"home":(h||(S.setup?"home":"calib")))}
+function route(){var h=decodeURIComponent(location.hash.slice(1)),mini=h==="targets";document.body.classList.toggle("mini",mini);go(mini?"home":(h||(S.setup?"home":"calib")));}
 function rankOf(l){return l>=22?"S":l>=15?"A":l>=10?"B":l>=6?"C":l>=3?"D":"E"}
 function toast(m,bad){var e=$("toast");e.textContent=m;e.className="toast on"+(bad?" err":"");clearTimeout(tt);tt=setTimeout(function(){e.className="toast"},2600)}
 function render(){
@@ -1581,6 +1581,46 @@ if ('serviceWorker'  in navigator) {
     });
   });
 }
+</script>
+
+<script>
+/* ReComp Discover navigation safeguard (v5.1). No user data is changed. */
+(function () {
+  function syncDiscover() {
+    if (location.hash.slice(1) !== 'discover') return;
+    var target = document.getElementById('k-disc');
+    var navButton = document.querySelector('#side .nv[data-p="discover"]');
+    if (!target) return;
+    document.querySelectorAll('.win[data-pg]').forEach(function(panel) {
+      panel.style.display = panel.dataset.pg === 'discover' ? 'block' : 'none';
+    });
+    document.querySelectorAll('#side .nv').forEach(function(button) {
+      var active = button === navButton;
+      button.classList.toggle('on', active);
+      if (active) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
+    });
+    var heading = document.getElementById('ptitle');
+    if (heading) heading.textContent = 'Discover';
+    if (!target.textContent.trim()) {
+      target.innerHTML = '<h2 class="t">Discover</h2><p class="note">Explore your fitness patterns, personal experiments and what-if projections.</p>'+
+        '<a class="hub" href="#patterns"><span>Behavioral Pattern Discovery</span><i>›</i></a>'+
+        '<a class="hub" href="#lab"><span>Personal Experiment Lab</span><i>›</i></a>'+
+        '<a class="hub" href="#whatif"><span>What-If Simulator</span><i>›</i></a>';
+    }
+  }
+  document.addEventListener('click', function(event) {
+    var button=event.target.closest && event.target.closest('#side .nv[data-p="discover"]');
+    if (!button) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (location.hash !== '#discover') location.hash='discover';
+    window.dispatchEvent(new Event('hashchange'));
+    syncDiscover();
+  }, true);
+  window.addEventListener('hashchange', function(){setTimeout(syncDiscover,0)});
+  window.addEventListener('load',syncDiscover);
+})();
 </script>
 </body>
 </html>

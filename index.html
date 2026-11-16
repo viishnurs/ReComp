@@ -593,8 +593,8 @@ button, [role="button"], summary { touch-action: manipulation; }
 
 <section class="win c8" data-pg="support"><a class="lk" href="#prefs" style="display:block;margin-bottom:10px">‹ Back to Profile</a><h2 class="t">Support and help</h2><div class="faq">
 <details><summary>How is my calorie target calculated?</summary><p class="note">The Mifflin-St Jeor formula estimates your resting burn from sex, age, height and weight. That is multiplied by your activity level, then adjusted for your goal: 15% below for fat loss with muscle gain, 20% below for a faster cut, 10% above for a lean bulk. Protein is set per kg of bodyweight. You can override the calories in Settings.</p></details>
-<details><summary>How does the food lookup work?</summary><p class="note">When you tap Calculate, Claude estimates calories, macros and 13 micronutrients for your food and quantity, based on typical Indian home-style recipes. It is an estimate. Weigh food or read the label when precision matters, and use manual entry for packaged food.</p></details>
-<details><summary>Where is my data stored?</summary><p class="note">In your browser on this device and, when you are signed in to Claude, in a private store tied to your account. The line at the bottom of the page says which one is active.</p></details>
+<details><summary>How does the food lookup work?</summary><p class="note">When you tap Calculate with AI, Gemini estimates calories, macros and 13 micronutrients for your food and quantity, based on typical Indian home-style recipes. It is an estimate. Weigh food or read the label when precision matters, and use manual entry for packaged food.</p></details>
+<details><summary>Where is my data stored?</summary><p class="note">In your browser on this device in local browser storage. In this standalone PWA, no automatic cloud synchronization is configured. The line at the bottom of the page says which one is active.</p></details>
 <details><summary>Why can’t steps sync from my Health app?</summary><p class="note">A web page isn’t allowed to read Apple Health, so you type your steps in. The step card on Home has a quick-save field.</p></details>
 <details><summary>What does Widget view do?</summary><p class="note">The VIEW button in the top bar shows only the four stat cards. Open the page with #targets on the end of the link to start in that view. A true home-screen widget isn’t possible for a web page.</p></details>
 <details><summary>How do streaks, XP and coins work?</summary><p class="note">A day counts toward your streak when you complete 3 of your 6 daily quests. Quests and logged food earn XP, every 10 XP gives a coin, and each achievement adds 50 coins to spend in the reward shop.</p></details>
@@ -1583,6 +1583,8 @@ window.ReCompBridge={getState:function(){return S},save:save,render:render,selec
 <script src="./ai-coach.js" defer></script>
 <link rel="stylesheet" href="./ai-food.css?v=11">
 <script src="./ai-food.js?v=11" defer></script>
+<link rel="stylesheet" href="./ai-integrations.css?v=12">
+<script src="./ai-integrations.js?v=12" defer></script>
 
 <link rel="stylesheet" href="./elegant.css?v=10">
 <script src="./elegant.js?v=10" defer></script>

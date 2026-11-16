@@ -1,0 +1,19 @@
+ReComp v5.1 — Discover navigation fix
+
+Only two files need to be changed in your existing GitHub repository:
+  1. index.html
+  2. sw.js
+
+At github.com/viishnurs/ReComp, select Add file > Upload files.
+Drag the two updated files from this package (replace the originals) and commit.
+If GitHub says the files already exist, use the normal GitHub edit/upload
+process or delete the old two files and upload the replacements.
+Do NOT delete local app data or change your GitHub Pages URL.
+
+Once the Pages deployment succeeds:
+  https://viishnurs.github.io/ReComp/#discover
+
+If the iPhone Home Screen app still shows an old version, open the link
+in Safari and refresh it. The service-worker cache version has changed.
+
+The patch changes only navigation/display logic, not your fitness records.

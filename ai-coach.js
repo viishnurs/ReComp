@@ -1,0 +1,36 @@
+/* ReComp AI Coach v4: no secrets in shipped source. */
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const B=window.ReCompBridge;
+const CHAT_KEY='recomp-ai-chat-v1', ENDPOINT_KEY='recomp-ai-endpoint-v1';
+let messages=[],busy=false,accessToken='';
+try {const loaded=JSON.parse(localStorage.getItem(CHAT_KEY)||'[]');if(Array.isArray(loaded))messages=loaded.filter(m=>m&&['user','model'].includes(m.role)&&typeof m.text==='string').slice(-20);}catch{}
+const persist=()=>{try{localStorage.setItem(CHAT_KEY,JSON.stringify(messages.slice(-20)))}catch{}};
+function bubble(role,t){const d=document.createElement('div');d.className='msg '+(role==='user'?'u':'a');d.textContent=t;$('cchat').appendChild(d);d.scrollIntoView({block:'nearest'});return d;}
+function reloadChat(){if(!$('cchat'))return;$('cchat').replaceChildren();messages.forEach(m=>bubble(m.role,m.text));}
+function shortSummary(){if(!B)throw Error('Tracker not loaded');const s=B.getState(),ts=B.targets(),last=[];const today=new Date();for(let n=6;n>=0;n--){let d=new Date(today);d.setDate(d.getDate()-n);let key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const t=B.totals(key);const sessions=(s.v3?.sessions||[]).filter(x=>x.date===key);last.push({date:key,kcal:Math.round(t.kcal||0),proteinG:Math.round(t.protein||0),steps:Number(s.steps?.[key]||0),waterMl:Number(s.water?.[key]||0),workouts:(s.workouts?.[key]||[]).length+sessions.length,weightKg:Number(s.weights?.[key]||0)||null});}
+const data={targets:{caloriesKcal:ts.kcal,proteinG:ts.pro,stepGoal:s.profile?.stepGoal},days:last};return data;}
+function setup(){if(!$('cchat'))return;try{$('rc4-endpoint').value=localStorage.getItem(ENDPOINT_KEY)||''}catch{}
+$('rc4-endpoint').addEventListener('change',()=>{const url=$('rc4-endpoint').value.trim().replace(/\/$/,'');try{localStorage.setItem(ENDPOINT_KEY,url)}catch{}});
+$('rc4-token').addEventListener('input',e=>accessToken=e.target.value.trim());
+$('rc4-share').addEventListener('change',()=>{$('rc4-preview').textContent=$('rc4-share').checked?'Each question sends your current calorie/protein targets and the previous 7 days of calories, protein, water, steps, workouts and weigh-ins. Names, meal details, notes, photos and measurements are excluded.':'No tracker data is sent unless checked.'});
+$('rc4-clear').onclick=()=>{if(!confirm('Clear AI conversation history stored on this device?'))return;messages=[];persist();reloadChat();};
+const nav=document.querySelector('#side .nv[data-p="discover"]');if(nav){const clone=nav.cloneNode(true);clone.id='rc4-nav';clone.dataset.p='coach';clone.title='AI Coach';const tx=clone.querySelector('.tx');if(tx)tx.textContent='AI Coach';clone.onclick=()=>{location.hash='coach'};nav.parentNode.insertBefore(clone,nav);}
+// Existing ReComp code already provides handlers for send, enter and suggested questions via ask().
+reloadChat();}
+async function ask(question){const input=$('cq'),err=$('cerr'),send=$('csend');if(busy)return;const q=String(question||'').trim();if(!q)return;if(q.length>1800){err.textContent='Please keep the question under 1,800 characters.';return;}
+const endpoint=$('rc4-endpoint').value.trim().replace(/\/$/,'');const token=accessToken||$('rc4-token').value.trim();
+if(!/^https:\/\/[a-zA-Z0-9.-]+(?:\:[0-9]+)?(?:\/[a-zA-Z0-9/_-]*)?$/.test(endpoint)){err.textContent='Enter the HTTPS Cloudflare Worker URL first.';return;}
+if(token.length<16){err.textContent='Enter your private access token (at least 16 characters).';return;}
+err.textContent='';input.value='';busy=true;send.disabled=true;
+const old=messages.slice(-10);bubble('user',q);const thinking=bubble('model','Thinking…');
+try{
+ const body={messages:[...old,{role:'user',text:q}]};if($('rc4-share').checked)body.tracker=shortSummary();
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),30000);
+ let response;try{response=await fetch(endpoint+'/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body),signal:ctrl.signal,cache:'no-store'});}finally{clearTimeout(timer)}
+ const result=await response.json().catch(()=>({}));if(!response.ok)throw Error(result.error||'Request failed (HTTP '+response.status+')');if(typeof result.reply!=='string'||!result.reply.trim())throw Error('AI returned an empty answer');
+ thinking.textContent=result.reply;messages.push({role:'user',text:q},{role:'model',text:result.reply});messages=messages.slice(-20);persist();
+}catch(e){thinking.remove();err.textContent=e.name==='AbortError'?'Connection timed out. Try again.':(e.message||'Connection failed.');}
+finally{busy=false;send.disabled=false;input.focus();}}
+window.ReCompAI={ask};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+})();

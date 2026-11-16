@@ -1,0 +1,16 @@
+/* v4: matches ReComp palette and rounded panel design */
+.rc4-config{border:1px solid var(--line);border-radius:16px;background:var(--bg3);padding:14px;margin-bottom:14px;display:grid;gap:8px}
+.rc4-config label{font-size:13px;color:var(--mute);margin:2px 0 0}
+.rc4-config input:not([type=checkbox]){width:100%;min-width:0;font-size:14px}
+.rc4-consent{display:flex!important;align-items:flex-start;gap:10px;line-height:1.5;cursor:pointer;color:var(--ink)!important}
+.rc4-consent input{width:20px!important;height:20px!important;min-height:20px!important;flex:0 0 20px;accent-color:var(--lime)}
+.rc4-tip{font-size:12px;color:var(--mute);line-height:1.45;overflow-wrap:anywhere;margin:0}
+#cchat{max-height:52vh;overflow-y:auto;scroll-behavior:smooth;overflow-wrap:anywhere}
+#cchat .msg{white-space:pre-wrap;border-radius:15px;line-height:1.55;font-size:14px;padding:12px;user-select:text}
+#cchat .msg.a{background:var(--bg3);border-color:var(--line)}
+#cchat .msg.u{background:color-mix(in srgb,var(--lime) 12%,var(--bg3));border-color:var(--lime)}
+#cchips{gap:7px;margin:12px 0}#cchips button{border-radius:14px;font-size:12px;min-height:34px;text-align:left}
+#rc4-clear{justify-self:start;font-size:12px;min-height:34px}
+#side #rc4-nav{display:flex!important;order:5!important}
+#side .nv[data-p=discover]{display:none!important}
+#side .nv[data-p=prefs]{order:6!important}

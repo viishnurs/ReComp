@@ -12,7 +12,18 @@ const persist=()=>{try{localStorage.setItem(CHAT_KEY,JSON.stringify(messages.sli
 function bubble(role,t){const d=document.createElement('div');d.className='msg '+(role==='user'?'u':'a');d.textContent=t;$('cchat').appendChild(d);d.scrollIntoView({block:'nearest'});return d;}
 function reloadChat(){if(!$('cchat'))return;$('cchat').replaceChildren();messages.forEach(m=>bubble(m.role,m.text));}
 function shortSummary(){if(!B)throw Error('Tracker not loaded');const s=B.getState(),ts=B.targets(),last=[];const today=new Date();for(let n=6;n>=0;n--){let d=new Date(today);d.setDate(d.getDate()-n);let key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const t=B.totals(key);const sessions=(s.v3?.sessions||[]).filter(x=>x.date===key);last.push({date:key,kcal:Math.round(t.kcal||0),proteinG:Math.round(t.protein||0),steps:Number(s.steps?.[key]||0),waterMl:Number(s.water?.[key]||0),workouts:(s.workouts?.[key]||[]).length+sessions.length,weightKg:Number(s.weights?.[key]||0)||null});}
-const data={targets:{caloriesKcal:ts.kcal,proteinG:ts.pro,stepGoal:s.profile?.stepGoal},days:last};return data;}
+// Send a deliberately limited recent-food sample only when the user opts in.
+// The day-level totals above remain authoritative; meals are context, not a full diary.
+const recentMeals=[];
+for(const day of [...last].reverse()){
+ const items=Array.isArray(s.days?.[day.date])?s.days[day.date]:[];
+ for(const entry of [...items].reverse()){
+  if(recentMeals.length>=8)break;
+  recentMeals.push({date:day.date,food:String(entry.name||'Unnamed food').slice(0,65),meal:String(entry.meal||'').slice(0,22),kcal:Math.round(Number(entry.kcal)||0),proteinG:Math.round(Number(entry.protein)||0),fiberG:Math.round(Number(entry.fiber)||0)});
+ }
+ if(recentMeals.length>=8)break;
+}
+const data={targets:{caloriesKcal:ts.kcal,proteinG:ts.pro,stepGoal:s.profile?.stepGoal},days:last,recentMeals,mealContextNote:'Only up to 8 latest entries from the past 7 days. Not a complete food diary. Entries may have missing fibre.'};return data;}
 function setup(){if(!$('cchat'))return;try{$('rc4-endpoint').value=localStorage.getItem(ENDPOINT_KEY)||''}catch{}
 const saved=savedToken(), field=$('rc4-token'), status=$('rc4-save-status');
 if(saved){field.value=saved;accessToken=saved;status.textContent='Connection saved on this device. You can use AI without entering the token again.';}
@@ -20,7 +31,7 @@ else status.textContent='Enter your token once. It will be remembered on this de
 $('rc4-forget-token').onclick=()=>{if(!confirm('Forget the saved AI access token on this device?'))return;rememberToken('');accessToken='';field.value='';status.textContent='Saved token forgotten. Enter it again to use AI.';};
 $('rc4-endpoint').addEventListener('change',()=>{const url=$('rc4-endpoint').value.trim().replace(/\/$/,'');try{localStorage.setItem(ENDPOINT_KEY,url)}catch{}});
 $('rc4-token').addEventListener('input',e=>{accessToken=e.target.value.trim();if(accessToken.length>=16){status.textContent=rememberToken(accessToken)?'Token saved in this device’s browser storage (not encrypted).':'Could not save token: check browser storage permissions.';}else{rememberToken('');status.textContent='Enter at least 16 characters to save your token.';}});
-$('rc4-share').addEventListener('change',()=>{$('rc4-preview').textContent=$('rc4-share').checked?'Each question sends your current calorie/protein targets and the previous 7 days of calories, protein, water, steps, workouts and weigh-ins. Names, meal details, notes, photos and measurements are excluded.':'No tracker data is sent unless checked.'});
+$('rc4-share').addEventListener('change',()=>{$('rc4-preview').textContent=$('rc4-share').checked?'Each question shares a 7-day totals summary plus up to 8 recent food entries (food names, meal types, calories, protein and fibre). No photos, private notes or measurements are sent.':'No tracker data is sent unless checked.'});
 $('rc4-clear').onclick=()=>{if(!confirm('Clear AI conversation history stored on this device?'))return;messages=[];persist();reloadChat();};
 // Do not replace the Discover tab with AI Coach; the app already links to #coach.
 // Existing ReComp code already provides handlers for send, enter and suggested questions via ask().

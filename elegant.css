@@ -90,3 +90,22 @@ input,select,textarea{border-radius:14px!important}
 :root[data-accent="bronze"][data-theme="light"]{--lime:#856742;--glow:#856742;--pk:#856742;--ok:#856742;--cy:#856742;--vi:#856742;--bl:#856742;--gold:#856742}
 :root[data-accent="iris"][data-theme="dark"]{--lime:#75658F;--glow:#75658F;--pk:#75658F;--ok:#75658F;--cy:#C5B9DC;--vi:#C5B9DC;--bl:#C5B9DC;--gold:#C5B9DC}
 :root[data-accent="iris"][data-theme="light"]{--lime:#69577E;--glow:#69577E;--pk:#69577E;--ok:#69577E;--cy:#69577E;--vi:#69577E;--bl:#69577E;--gold:#69577E}
+
+/* v10: user-requested precise Appearance colours */
+:root[data-accent="royalblue"]{--lime:#315BDB;--glow:#315BDB;--pk:#315BDB;--ok:#315BDB;--cy:#84A5FF;--vi:#84A5FF;--bl:#84A5FF;--gold:#84A5FF}
+:root[data-accent="royalblue"][data-theme="light"]{--lime:#315BDB;--glow:#315BDB;--pk:#315BDB;--ok:#315BDB;--cy:#315BDB;--vi:#315BDB;--bl:#315BDB;--gold:#315BDB}
+:root[data-accent="neonlime"]{--lime:#B7FF36;--glow:#B7FF36;--pk:#B7FF36;--ok:#B7FF36;--cy:#D9FF9B;--vi:#D9FF9B;--bl:#D9FF9B;--gold:#D9FF9B}
+:root[data-accent="neonlime"][data-theme="light"]{--lime:#669900;--glow:#669900;--pk:#669900;--ok:#669900;--cy:#557E00;--vi:#557E00;--bl:#557E00;--gold:#557E00}
+:root[data-accent="neonlime"] .btn.pri,:root[data-accent="neonlime"] .seg button.on,:root[data-accent="neonlime"] .av,:root[data-accent="neonlime"] .cd.g,:root[data-accent="neonlime"] .q.ok .ck,:root[data-accent="neonlime"] .hab.ok .ck{color:#14200A!important}
+.rc10-fibre{margin-top:16px;padding:14px 12px;border-radius:14px;background:var(--bg3);border:1px solid var(--line)}
+.rc10-fibre-tag{font-size:10px;color:var(--cy);font-weight:600;margin-left:4px}
+.rc10-fibre-note{margin-top:7px;font-size:11px;line-height:1.45}
+
+/* v10 iPhone safe-area: respect notch / Dynamic Island without blocking accessible pinch-zoom. */
+:root{padding-top:0!important;padding-bottom:0!important}
+body{padding-top:env(safe-area-inset-top,0px)!important}
+@supports (padding-top:max(0px,1px)) {
+ body{padding-top:max(env(safe-area-inset-top,0px),0px)!important}
+}
+/* Keep the fixed bottom navigation outside the home-indicator zone. */
+#side{bottom:calc(10px + env(safe-area-inset-bottom,0px))!important}

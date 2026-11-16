@@ -533,8 +533,10 @@ button, [role="button"], summary { touch-action: manipulation; }
   <div class="rc4-config">
 <label for="rc4-endpoint">Your Cloudflare Worker endpoint (HTTPS)</label>
 <input id="rc4-endpoint" type="url" inputmode="url" autocomplete="url" placeholder="https://recomp-coach.YOURNAME.workers.dev">
-<label for="rc4-token">Private access token (not saved)</label>
+<label for="rc4-token">Private access token (remembered on this device)</label>
 <input id="rc4-token" type="password" autocomplete="off" placeholder="Paste your COACH_ACCESS_TOKEN">
+<p id="rc4-save-status" class="rc4-tip" role="status">Token will be saved locally on this device.</p>
+<button class="btn" type="button" id="rc4-forget-token">Forget saved token</button>
 <label class="rc4-consent"><input type="checkbox" id="rc4-share"> Include a compact summary of my ReComp logs in each AI request</label>
 <p id="rc4-preview" class="rc4-tip">No tracker data is sent unless checked.</p>
 <button class="btn" type="button" id="rc4-clear">Clear chat history on this device</button>
@@ -1580,11 +1582,11 @@ window.ReCompBridge={getState:function(){return S},save:save,render:render,selec
 <script src="./enhancements.js" defer></script>
 <link rel="stylesheet" href="./ai-coach.css">
 
-<script src="./ai-coach.js" defer></script>
+<script src="./ai-coach.js?v=13" defer></script>
 <link rel="stylesheet" href="./ai-food.css?v=11">
-<script src="./ai-food.js?v=11" defer></script>
+<script src="./ai-food.js?v=13" defer></script>
 <link rel="stylesheet" href="./ai-integrations.css?v=12">
-<script src="./ai-integrations.js?v=12" defer></script>
+<script src="./ai-integrations.js?v=13" defer></script>
 
 <link rel="stylesheet" href="./elegant.css?v=10">
 <script src="./elegant.js?v=10" defer></script>

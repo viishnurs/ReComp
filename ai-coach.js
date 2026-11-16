@@ -2,7 +2,10 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const B=window.ReCompBridge;
-const CHAT_KEY='recomp-ai-chat-v1', ENDPOINT_KEY='recomp-ai-endpoint-v1';
+const CHAT_KEY='recomp-ai-chat-v1', ENDPOINT_KEY='recomp-ai-endpoint-v1', TOKEN_KEY='recomp-ai-access-token-v1';
+function savedToken(){try{return localStorage.getItem(TOKEN_KEY)||''}catch{return ''}}
+function rememberToken(value){try{if(value)localStorage.setItem(TOKEN_KEY,value);else localStorage.removeItem(TOKEN_KEY);return true}catch{return false}}
+window.ReCompAIConfig={getToken:()=>($('rc4-token')?.value||'').trim()||savedToken(),getEndpoint:()=>($('rc4-endpoint')?.value||'').trim()||(()=>{try{return localStorage.getItem(ENDPOINT_KEY)||''}catch{return ''}})()};
 let messages=[],busy=false,accessToken='';
 try {const loaded=JSON.parse(localStorage.getItem(CHAT_KEY)||'[]');if(Array.isArray(loaded))messages=loaded.filter(m=>m&&['user','model'].includes(m.role)&&typeof m.text==='string').slice(-20);}catch{}
 const persist=()=>{try{localStorage.setItem(CHAT_KEY,JSON.stringify(messages.slice(-20)))}catch{}};
@@ -11,15 +14,19 @@ function reloadChat(){if(!$('cchat'))return;$('cchat').replaceChildren();message
 function shortSummary(){if(!B)throw Error('Tracker not loaded');const s=B.getState(),ts=B.targets(),last=[];const today=new Date();for(let n=6;n>=0;n--){let d=new Date(today);d.setDate(d.getDate()-n);let key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const t=B.totals(key);const sessions=(s.v3?.sessions||[]).filter(x=>x.date===key);last.push({date:key,kcal:Math.round(t.kcal||0),proteinG:Math.round(t.protein||0),steps:Number(s.steps?.[key]||0),waterMl:Number(s.water?.[key]||0),workouts:(s.workouts?.[key]||[]).length+sessions.length,weightKg:Number(s.weights?.[key]||0)||null});}
 const data={targets:{caloriesKcal:ts.kcal,proteinG:ts.pro,stepGoal:s.profile?.stepGoal},days:last};return data;}
 function setup(){if(!$('cchat'))return;try{$('rc4-endpoint').value=localStorage.getItem(ENDPOINT_KEY)||''}catch{}
+const saved=savedToken(), field=$('rc4-token'), status=$('rc4-save-status');
+if(saved){field.value=saved;accessToken=saved;status.textContent='Connection saved on this device. You can use AI without entering the token again.';}
+else status.textContent='Enter your token once. It will be remembered on this device.';
+$('rc4-forget-token').onclick=()=>{if(!confirm('Forget the saved AI access token on this device?'))return;rememberToken('');accessToken='';field.value='';status.textContent='Saved token forgotten. Enter it again to use AI.';};
 $('rc4-endpoint').addEventListener('change',()=>{const url=$('rc4-endpoint').value.trim().replace(/\/$/,'');try{localStorage.setItem(ENDPOINT_KEY,url)}catch{}});
-$('rc4-token').addEventListener('input',e=>accessToken=e.target.value.trim());
+$('rc4-token').addEventListener('input',e=>{accessToken=e.target.value.trim();if(accessToken.length>=16){status.textContent=rememberToken(accessToken)?'Token saved in this device’s browser storage (not encrypted).':'Could not save token: check browser storage permissions.';}else{rememberToken('');status.textContent='Enter at least 16 characters to save your token.';}});
 $('rc4-share').addEventListener('change',()=>{$('rc4-preview').textContent=$('rc4-share').checked?'Each question sends your current calorie/protein targets and the previous 7 days of calories, protein, water, steps, workouts and weigh-ins. Names, meal details, notes, photos and measurements are excluded.':'No tracker data is sent unless checked.'});
 $('rc4-clear').onclick=()=>{if(!confirm('Clear AI conversation history stored on this device?'))return;messages=[];persist();reloadChat();};
 // Do not replace the Discover tab with AI Coach; the app already links to #coach.
 // Existing ReComp code already provides handlers for send, enter and suggested questions via ask().
 reloadChat();}
 async function ask(question){const input=$('cq'),err=$('cerr'),send=$('csend');if(busy)return;const q=String(question||'').trim();if(!q)return;if(q.length>1800){err.textContent='Please keep the question under 1,800 characters.';return;}
-const endpoint=$('rc4-endpoint').value.trim().replace(/\/$/,'');const token=accessToken||$('rc4-token').value.trim();
+const endpoint=$('rc4-endpoint').value.trim().replace(/\/$/,'');const token=accessToken||$('rc4-token').value.trim()||savedToken();
 if(!/^https:\/\/[a-zA-Z0-9.-]+(?:\:[0-9]+)?(?:\/[a-zA-Z0-9/_-]*)?$/.test(endpoint)){err.textContent='Enter the HTTPS Cloudflare Worker URL first.';return;}
 if(token.length<16){err.textContent='Enter your private access token (at least 16 characters).';return;}
 err.textContent='';input.value='';busy=true;send.disabled=true;

@@ -6,9 +6,9 @@ let busy=false,proposal=null;
 const safeValue=(n)=>{const v=Number(n);return Number.isFinite(v)&&v>=0&&v<1000000?v:null;};
 const create=(tag,cls,txt)=>{let e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
 function configuration(){let endpoint=($('rc4-endpoint')?.value||'').trim().replace(/\/+$/,'');if(!endpoint)try{endpoint=localStorage.getItem('recomp-ai-endpoint-v1')||'';}catch{}
-const token=($('rc4-token')?.value||'').trim();
+const token=(window.ReCompAIConfig?.getToken()||'').trim();
 if(!/^https:\/\/[a-zA-Z0-9.-]+(?::\d+)?(?:\/[a-zA-Z0-9/_-]*)?$/.test(endpoint))throw Error('Set your Cloudflare Worker URL in AI Coach first.');
-if(token.length<16)throw Error('Open AI Coach and enter your private access token first (it is not saved).');
+if(token.length<16)throw Error('Open AI Coach and save your private access token first.');
 return {endpoint,token};}
 function renderEstimate(raw){
  proposal=raw;

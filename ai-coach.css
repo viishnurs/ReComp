@@ -15,3 +15,6 @@
 #side #rc4-nav{display:none!important}
 #side .nv[data-p="discover"]{display:flex!important;order:5!important}
 #side .nv[data-p="prefs"]{order:6!important}
+
+#rc4-forget-token{justify-self:start;min-height:36px;font-size:12px}
+#rc4-save-status{font-size:12px;line-height:1.4}

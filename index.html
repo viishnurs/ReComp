@@ -690,7 +690,7 @@ var ACH=[["wk1","First workout","Complete your first workout",function(s){return
 ["wt5","Scale keeper","Record 5 weigh-ins",function(){return Object.keys(S.weights).length>=5}]];
 function wq(m){var w=0,s=0,l=0,i,d,k;for(i=0;i<7;i++){d=new Date(m);d.setDate(m.getDate()+i);k=key(d);w+=(S.workouts[k]||[]).length;if((S.steps[k]||0)>=S.profile.stepGoal)s++;if((S.days[k]||[]).length>=3)l++}
   return[{n:"Complete 3 workouts",d:"Three logged workouts this week",p:w,t:3,x:60},{n:"Hit your step goal on 4 days",d:"Reach your daily step goal",p:s,t:4,x:60},{n:"Log 3 meals on 5 days",d:"Keep food logging consistent",p:l,t:5,x:60}]}
-function mon(k){var d=new Date(k+"T12:00:00");d.setDate(d.getDate()-(d.getDay()+6)%7);return d}
+function mon(k){var d=new Date(k+"T12:00:00");d.setDate(d.getDate()-d.getDay());return d}
 function weekBonus(all){var seen={},b=0;all.forEach(function(k){var m=mon(k),mk=key(m);if(seen[mk])return;seen[mk]=1;wq(m).forEach(function(q){if(q.p>=q.t)b+=q.x})});return b}
 function stats(T){
   var ks={};Object.keys(S.days).concat(Object.keys(S.water),Object.keys(S.steps)).forEach(function(k){ks[k]=1});Object.keys(S.workouts).forEach(function(k){ks[k]=1});
@@ -708,9 +708,9 @@ function checkAch(ST){var nw=[];ACH.forEach(function(a){if(!S.ach[a[0]]&&a[3](ST
   if(nw.length){save();if(achReady)setTimeout(function(){toast("Achievement unlocked: "+nw.join(", ")+" (+"+50*nw.length+" pts)")},1300)}}
 function renderCal(T){
   if(!calM){calM=new Date(cur);calM.setDate(1)}
-  var y=calM.getFullYear(),m=calM.getMonth(),lead=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate(),today=key(new Date()),h="",g=0,yl=0;
+  var y=calM.getFullYear(),m=calM.getMonth(),lead=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),today=key(new Date()),h="",g=0,yl=0;
   $("calt").textContent=new Date(y,m,1).toLocaleDateString(undefined,{month:"long",year:"numeric"});
-  ["M","T","W","T","F","S","S"].forEach(function(x){h+='<div class="ch">'+x+'</div>'});
+  ["S","M","T","W","T","F","S"].forEach(function(x){h+='<div class="ch">'+x+'</div>'});
   for(var i=0;i<lead;i++)h+="<div></div>";
   for(var d=1;d<=dim;d++){var k=key(new Date(y,m,d,12)),inf=dayInfo(k,T),cls=inf.act?(inf.c>=4?"g":"y"):"n";if(inf.c>=4&&inf.act)g++;else if(inf.act)yl++;
     h+='<button type="button" class="cd '+cls+(k>today?" f":"")+(k===today?" t":"")+'" data-k="'+k+'" aria-label="'+k+', '+inf.c+' of 6 goals">'+d+'</button>'}
@@ -721,11 +721,11 @@ var pV="day",stR="today";
 function pT(pl){var r={k:0,p:0,c:0,f:0,d:0};MEALS.forEach(function(m){var o=pl[m+"#"]||{};r.k+=num(o.k);r.p+=num(o.p);r.c+=num(o.c);r.f+=num(o.f);if(pl[m+"!"])r.d++});return r}
 function renderPlan(){
   var T=targets(),h='<div class="seg" style="display:flex;width:100%"><button type="button" style="flex:1" data-v="day" class="'+(pV==="day"?"on":"")+'">Daily</button><button type="button" style="flex:1" data-v="week" class="'+(pV==="week"?"on":"")+'">Weekly</button></div>';
-  if(pV==="day")WD.forEach(function(w,i){h+='<button type="button" class="'+(i===pDay?"on":"")+'" data-i="'+i+'">'+w+'</button>'});
+  if(pV==="day")[6,0,1,2,3,4,5].forEach(function(i){var w=WD[i];h+='<button type="button" class="'+(i===pDay?"on":"")+'" data-i="'+i+'">'+w+'</button>'});
   var pdv=$("pdays");pdv.innerHTML=h;
   pdv.querySelectorAll("button").forEach(function(b){b.onclick=function(){if(b.dataset.v){pV=b.dataset.v}else pDay=+b.dataset.i;renderPlan()}});
   var ps=$("pslots");ps.innerHTML="";
-  if(pV==="week"){var w2="";WD.forEach(function(w,i){var p=S.plan[i]||{},t=pT(p),n=MEALS.filter(function(m){return(p[m]||"").trim()}).length;
+  if(pV==="week"){var w2="";[6,0,1,2,3,4,5].forEach(function(i){var w=WD[i];var p=S.plan[i]||{},t=pT(p),n=MEALS.filter(function(m){return(p[m]||"").trim()}).length;
     w2+='<div class="wr" data-i="'+i+'"><b>'+w+'</b><div><div class="bar" style="margin:0 0 5px"><i style="width:'+clamp(t.k/T.kcal)*100+'%"></i></div><div class="sub">'+n+'/4 planned · '+t.d+' done · P '+Math.round(t.p)+' · C '+Math.round(t.c)+' · F '+Math.round(t.f)+'</div></div><b>'+fmt(t.k)+'<span class="sub"> kcal</span></b></div>'});
     ps.innerHTML='<div style="margin-top:10px">'+w2+'</div>';
     ps.querySelectorAll(".wr").forEach(function(r){r.onclick=function(){pDay=+r.dataset.i;pV="day";renderPlan()}});return}
@@ -792,7 +792,7 @@ function nav(q){if(location.hash.slice(1)===q)go(q);else location.hash=q}
 function applyTheme(){var t=S.theme;if(!t){try{t=localStorage.getItem("recomp-theme")}catch(e){}}var TH={dark:"#000000",charcoal:"#1A1D21",midnight:"#050A18",mocha:"#14100D",light:"#F5F7FA",sand:"#F4EFE6"};t=TH[t]?t:"dark";var R=document.documentElement;R.setAttribute("data-theme",(t==="light"||t==="sand")?"light":"dark");R.setAttribute("data-bg",(t==="dark"||t==="light")?"":t);var m=document.querySelector("meta[name=theme-color]");if(m)m.content=TH[t];var a=S.accent;if(!a){try{a=localStorage.getItem("recomp-accent")}catch(e){}}document.documentElement.setAttribute("data-accent",a||"sapphire")}
 function rangeDays(){var d=new Date(cur),out=[],today=key(new Date()),a,b;
   if(range==="day")return[key(d)];
-  if(range==="week"){a=new Date(d);a.setDate(d.getDate()-(d.getDay()+6)%7);b=new Date(a);b.setDate(a.getDate()+6)}
+  if(range==="week"){a=new Date(d);a.setDate(d.getDate()-d.getDay());b=new Date(a);b.setDate(a.getDate()+6)}
   else{a=new Date(d.getFullYear(),d.getMonth(),1,12);b=new Date(d.getFullYear(),d.getMonth()+1,0,12)}
   for(var x=new Date(a);x<=b;x.setDate(x.getDate()+1)){var k=key(x);if(k<=today)out.push(k)}
   return out.length?out:[key(d)]}
@@ -815,7 +815,7 @@ function chartGate(e,c,any){var ok=!!window.Chart;$(e).hidden=ok&&any;$(c).hidde
 function renderAct(){
   var d=new Date(cur),labels=[],kc=[],mn=[],i,k;
   if(actMode==="today"){var it=S.days[key(cur)]||[];labels=MEALS.slice();kc=MEALS.map(function(m){var q=0;it.forEach(function(e){if(e.meal===m)q+=num(e.kcal)});return Math.round(q)});mn=null}
-  else if(actMode==="week"){var s0=new Date(d);s0.setDate(d.getDate()-(d.getDay()+6)%7);for(i=0;i<7;i++){var x=new Date(s0);x.setDate(s0.getDate()+i);k=key(x);labels.push(WD[i]);kc.push(Math.round(totals(k).kcal));mn.push(minOf(k))}}
+  else if(actMode==="week"){var s0=new Date(d);s0.setDate(d.getDate()-d.getDay());for(i=0;i<7;i++){var x=new Date(s0);x.setDate(s0.getDate()+i);k=key(x);labels.push(["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][i]);kc.push(Math.round(totals(k).kcal));mn.push(minOf(k))}}
   else{var dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();for(i=1;i<=dim;i++){k=key(new Date(d.getFullYear(),d.getMonth(),i,12));labels.push(String(i));kc.push(Math.round(totals(k).kcal));mn.push(minOf(k))}}
   document.querySelectorAll("#seg-act button").forEach(function(b){b.className=b.dataset.a===actMode?"on":""});
   var any=kc.some(function(v){return v>0})||(mn&&mn.some(function(v){return v>0}));
@@ -860,7 +860,7 @@ function updTop(){var P=S.profile,h=new Date().getHours(),g=h<12?"Good morning":
   $("greet").textContent=page==="home"?(done===5?"You’re awesome. Keep going!":done+" of 5 habits done. You’re awesome, keep going!"):"";
   $("uav").textContent=P.name.charAt(0).toUpperCase();if(page==="home")$("greet").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"})+(lastST?" · Lv "+lastST.lv+" · "+fmt(lastST.xp)+" pts":"");
   var td=key(new Date()),d=new Date(cur),lab;
-  if(range==="week"){var a=new Date(d);a.setDate(d.getDate()-(d.getDay()+6)%7);lab="Week of "+dl(key(a))}
+  if(range==="week"){var a=new Date(d);a.setDate(d.getDate()-d.getDay());lab="Week of "+dl(key(a))}
   else if(range==="month")lab=d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
   else lab=key(cur)===td?"Today":dl(key(cur));
   $("dlabel").textContent=lab}
@@ -1130,7 +1130,7 @@ function hubHTML(a){return a.map(function(x){return'<a class="hub" href="#'+x[0]
 function stepsCard(k){
  var P=S.profile,today=key(new Date()),d=new Date(cur),ks=[],a,b,x,el,v=0,mx=1,goal;
  if(stR==="today")ks=[k];else{
-  if(stR==="week"){a=new Date(d);a.setDate(d.getDate()-(d.getDay()+6)%7);b=new Date(a);b.setDate(a.getDate()+6)}
+  if(stR==="week"){a=new Date(d);a.setDate(d.getDate()-d.getDay());b=new Date(a);b.setDate(a.getDate()+6)}
   else{a=new Date(d.getFullYear(),d.getMonth(),1,12);b=new Date(d.getFullYear(),d.getMonth()+1,0,12)}
   for(x=new Date(a);x<=b;x.setDate(x.getDate()+1))ks.push(key(x))}
  el=ks.filter(function(q){return q<=today});if(!el.length)el=[ks[0]];
@@ -1573,6 +1573,8 @@ window.ReCompBridge={getState:function(){return S},save:save,render:render,selec
 <link rel="stylesheet" href="./motivation.css">
 <script src="./ai-coach.js" defer></script>
 <script src="./motivation.js" defer></script>
+<link rel="stylesheet" href="./elegant.css?v=6">
+<script src="./elegant.js?v=6" defer></script>
 <script>
 if ('serviceWorker'  in navigator) {
   window.addEventListener('load', function () {

@@ -1,0 +1,71 @@
+/* ReComp v16: structural mobile layout corrections; loaded AFTER v15 phone-layout.css. */
+:root{--rc16-edge:12px}
+html,body{width:100%;min-width:0;overflow-x:clip}
+main{width:100%!important;max-width:520px!important;margin:0 auto!important;padding-left:max(var(--rc16-edge),env(safe-area-inset-left))!important;padding-right:max(var(--rc16-edge),env(safe-area-inset-right))!important;padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+/* Do not mask overflow by clipping card contents: expand vertically instead. */
+.grid12,.grid12>.win,.grid12>.rc9-widget{min-width:0;max-width:100%}
+.grid12>.win{overflow:visible!important;overflow-wrap:break-word}
+.grid12>.win:not([hidden]){height:auto;min-height:0}
+.grid12 .ins,.grid12 .pm,.grid12 .tw,.grid12 .rc3-metric,.grid12 .rc3-entry,.grid12 .res,.grid12 .calc{min-width:0;max-width:100%;box-sizing:border-box}
+/* Preserve calendar + chart geometry without allowing a canvas/SVG to enlarge a card. */
+canvas,svg.rc3-chart,#rc3-weightchart svg{display:block;max-width:100%}
+.cw{position:relative;max-width:100%;min-width:0;overflow:hidden}.cw canvas{max-width:100%;height:100%!important}
+.rc3-chart{width:100%;height:auto!important}
+/* Cards and controls: flexible content cannot force another field underneath. */
+.grid12 .grid,.grid12 .rc3-grid,.grid12 .sg{min-width:0}
+.grid12 .grid>*,.grid12 .rc3-grid>*,.grid12 .sg>*,.grid12 .rc3-row>*,.grid12 .row>*,.grid12 .sh>*{min-width:0;max-width:100%}
+.grid12 input,.grid12 select,.grid12 textarea{min-width:0;width:100%;max-width:100%;font-size:16px!important;line-height:1.3}
+.grid12 .row,.grid12 .sh,.grid12 .rc3-row{gap:8px;align-items:center;flex-wrap:wrap}
+.grid12 .sh .t2,.grid12 .rc3-row b{flex:1 1 120px}
+.grid12 .btn,.grid12 button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:break-word;line-height:1.3}
+.grid12 .seg{max-width:100%;display:flex;flex-wrap:wrap;gap:3px}.grid12 .seg button{flex:1 1 auto}
+.grid12 .rc3-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* Fix original mobile 2-up cards that squeezed summary content too tightly. */
+@media(max-width:410px){
+ .grid12>.win.c3{grid-column:1/-1!important}
+ .grid12 .nuv,.grid12 .tws,.grid12 .mic{grid-template-columns:1fr!important}
+ .grid12 .wst{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .grid12 .rc3-grid{grid-template-columns:1fr!important}
+ .grid12 .sg{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+/* Strength session: each set is its own labeled, editable mobile card. */
+#rc3-sets .ins{padding:12px!important;overflow:visible!important}
+#rc3-sets .rc3-sets{display:block!important;width:100%!important;max-width:100%;border:0!important;table-layout:auto!important}
+#rc3-sets .rc3-sets thead{display:none!important}
+#rc3-sets .rc3-sets tbody{display:grid!important;grid-template-columns:1fr;gap:10px;width:100%}
+#rc3-sets .rc3-sets tr{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;padding:11px;border:1px solid var(--line);background:var(--bg3);border-radius:14px;min-width:0;align-items:end}
+#rc3-sets .rc3-sets td{width:auto!important;min-width:0;max-width:100%;display:flex;flex-direction:column;gap:5px;padding:0!important;border:0!important;font-size:13px;overflow:visible!important}
+#rc3-sets .rc3-sets td:before{content:attr(data-label);display:block;color:var(--mute);font-size:11px;font-weight:700}
+#rc3-sets .rc3-sets td:first-child{grid-column:span 2;font-weight:800;font-size:15px}
+#rc3-sets .rc3-sets td:last-child{grid-column:span 2;display:flex;align-items:stretch}
+#rc3-sets .rc3-sets td:last-child:before{display:none}
+#rc3-sets .rc3-sets input{min-height:44px!important;box-sizing:border-box;text-align:left!important;padding:8px 10px!important;width:100%!important}
+#rc3-sets .rc3-sets td:last-child button{min-height:36px!important;width:100%!important}
+#rc3-sets .rc3-row{margin-bottom:10px}
+/* Transform, stats and micronutrients: one metric per row when room is limited. */
+#rc3-transform .rc3-metric,#rc3-gym .rc3-metric,.wst>div,.tws>div{overflow-wrap:break-word}
+#rc3-transform .rc3-grid label{line-height:1.3}
+#rc3-measurelist .rc3-entry,#rc3-gymhistory .rc3-entry{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px}
+#rc3-measurelist .rc3-copy,#rc3-gymhistory .rc3-copy{flex:1 1 160px}
+#mtot .mb{display:block;min-width:0}
+#mtot .mb>.row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px}
+#mtot .mb>.row>*{flex:0 1 auto;min-width:0;overflow-wrap:break-word}
+#k-nut .mic>div,#res .mic>div{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px}
+#k-nut .mic,#res .mic{grid-template-columns:1fr 1fr}
+@media(max-width:430px){#k-nut .mic,#res .mic{grid-template-columns:1fr!important}}
+/* Motivation: make ring and message stack if they cannot fit side-by-side. */
+#rc6-home .rc6-hero{overflow:hidden!important}
+.rc6-hero-core{grid-template-columns:minmax(0,96px) minmax(0,1fr)!important;gap:12px!important;align-items:center}
+.rc6-ring-description{min-width:0;overflow-wrap:break-word}
+.rc6-ring-description b,.rc6-ring-description p,.rc6-ring-description em{display:block;max-width:100%;line-height:1.45}
+.rc6-headrow{flex-wrap:wrap}
+@media(max-width:360px){.rc6-hero-core{grid-template-columns:1fr!important}.rc6-ring{margin:auto}.rc6-ctas{grid-template-columns:1fr!important}}
+/* iPhone bottom bar: six equal slots, labels never outside bounds. */
+#side{display:flex!important;flex-direction:row!important;align-items:stretch!important;justify-content:space-between!important;gap:2px!important;padding:5px!important;height:70px!important;min-height:0!important;max-height:70px!important;overflow:hidden!important}
+#side .nv[data-p]{box-sizing:border-box;min-width:0!important;max-width:none!important;flex:1 1 0!important;width:0!important;padding:6px 1px 5px!important;justify-content:center!important;align-items:center!important;gap:4px!important;overflow:hidden!important}
+#side .nv svg{flex:none!important;max-width:21px!important}
+#side .nv .tx{font-size:clamp(8px,2.3vw,10px)!important;line-height:1.1!important;overflow-wrap:normal!important;word-break:normal!important}
+#side .nv:not([data-p="home"]):not([data-p="nutrition"]):not([data-p="twin"]):not([data-p="goals"]):not([data-p="discover"]):not([data-p="prefs"]){display:none!important}
+@media(max-width:360px){#side{width:calc(100% - 10px)!important;padding:4px!important;gap:0!important}}
+/* Keep a small pad below content so fixed tab bar doesn't cover buttons. */
+main{padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))!important}

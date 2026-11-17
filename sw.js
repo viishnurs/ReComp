@@ -1,6 +1,6 @@
 // ReComp v2: offline-first assets; network-first navigation so new releases are picked up.
-const CACHE = 'recomp-pwa-v15-layout-chat-1';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png', './enhancements.css', './enhancements.js', './ai-coach.css', './ai-coach.js', './ai-food.css', './ai-food.js', './ai-integrations.css', './ai-integrations.js', './elegant.css', './elegant.js', './phone-layout.css'];
+const CACHE = 'recomp-pwa-v16-layout-cards-1';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png', './enhancements.css', './enhancements.js', './ai-coach.css', './ai-coach.js', './ai-food.css', './ai-food.js', './ai-integrations.css', './ai-integrations.js', './elegant.css', './elegant.js', './phone-layout.css', './mobile-layout-v16.css'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
 });

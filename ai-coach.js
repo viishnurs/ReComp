@@ -7,8 +7,12 @@ function savedToken(){try{return localStorage.getItem(TOKEN_KEY)||''}catch{retur
 function rememberToken(value){try{if(value)localStorage.setItem(TOKEN_KEY,value);else localStorage.removeItem(TOKEN_KEY);return true}catch{return false}}
 window.ReCompAIConfig={getToken:()=>($('rc4-token')?.value||'').trim()||savedToken(),getEndpoint:()=>($('rc4-endpoint')?.value||'').trim()||(()=>{try{return localStorage.getItem(ENDPOINT_KEY)||''}catch{return ''}})()};
 let messages=[],busy=false,accessToken='';
-try {const loaded=JSON.parse(localStorage.getItem(CHAT_KEY)||'[]');if(Array.isArray(loaded))messages=loaded.filter(m=>m&&['user','model'].includes(m.role)&&typeof m.text==='string').slice(-20);}catch{}
-const persist=()=>{try{localStorage.setItem(CHAT_KEY,JSON.stringify(messages.slice(-20)))}catch{}};
+// Privacy: discard previous versions' stored conversations; never persist new chats.
+try { localStorage.removeItem(CHAT_KEY); } catch {}
+const persist=()=>{};
+let coachWasOpen=false;
+function resetConversation(){messages=[];if($('cchat'))$('cchat').replaceChildren();if($('cerr'))$('cerr').textContent='';}
+function resetOnCoachEntry(){const isOpen=location.hash.slice(1)==='coach';if(isOpen&&!coachWasOpen)resetConversation();coachWasOpen=isOpen;}
 function bubble(role,t){const d=document.createElement('div');d.className='msg '+(role==='user'?'u':'a');d.textContent=t;$('cchat').appendChild(d);d.scrollIntoView({block:'nearest'});return d;}
 function reloadChat(){if(!$('cchat'))return;$('cchat').replaceChildren();messages.forEach(m=>bubble(m.role,m.text));}
 function shortSummary(){if(!B)throw Error('Tracker not loaded');const s=B.getState(),ts=B.targets(),last=[];const today=new Date();for(let n=6;n>=0;n--){let d=new Date(today);d.setDate(d.getDate()-n);let key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const t=B.totals(key);const sessions=(s.v3?.sessions||[]).filter(x=>x.date===key);last.push({date:key,kcal:Math.round(t.kcal||0),proteinG:Math.round(t.protein||0),steps:Number(s.steps?.[key]||0),waterMl:Number(s.water?.[key]||0),workouts:(s.workouts?.[key]||[]).length+sessions.length,weightKg:Number(s.weights?.[key]||0)||null});}
@@ -31,8 +35,9 @@ else status.textContent='Enter your token once. It will be remembered on this de
 $('rc4-forget-token').onclick=()=>{if(!confirm('Forget the saved AI access token on this device?'))return;rememberToken('');accessToken='';field.value='';status.textContent='Saved token forgotten. Enter it again to use AI.';};
 $('rc4-endpoint').addEventListener('change',()=>{const url=$('rc4-endpoint').value.trim().replace(/\/$/,'');try{localStorage.setItem(ENDPOINT_KEY,url)}catch{}});
 $('rc4-token').addEventListener('input',e=>{accessToken=e.target.value.trim();if(accessToken.length>=16){status.textContent=rememberToken(accessToken)?'Token saved in this device’s browser storage (not encrypted).':'Could not save token: check browser storage permissions.';}else{rememberToken('');status.textContent='Enter at least 16 characters to save your token.';}});
-$('rc4-share').addEventListener('change',()=>{$('rc4-preview').textContent=$('rc4-share').checked?'Each question shares a 7-day totals summary plus up to 8 recent food entries (food names, meal types, calories, protein and fibre). No photos, private notes or measurements are sent.':'No tracker data is sent unless checked.'});
-$('rc4-clear').onclick=()=>{if(!confirm('Clear AI conversation history stored on this device?'))return;messages=[];persist();reloadChat();};
+const share=$('rc4-share');share.checked=true;const updateShareText=()=>{$('rc4-preview').textContent=share.checked?'On: each question includes 7-day nutrition totals plus up to 8 recent logged foods. You can turn this off before asking. No photos, journal notes or body measurements are sent.':'Off: no tracker data is sent with your question.';};share.addEventListener('change',updateShareText);updateShareText();
+// No stored chat history. Messages are cleared whenever AI Coach is reopened.
+window.addEventListener('hashchange',resetOnCoachEntry);resetOnCoachEntry();
 // Do not replace the Discover tab with AI Coach; the app already links to #coach.
 // Existing ReComp code already provides handlers for send, enter and suggested questions via ask().
 reloadChat();}
@@ -47,7 +52,7 @@ try{
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),30000);
  let response;try{response=await fetch(endpoint+'/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body),signal:ctrl.signal,cache:'no-store'});}finally{clearTimeout(timer)}
  const result=await response.json().catch(()=>({}));if(!response.ok)throw Error(result.error||'Request failed (HTTP '+response.status+')');if(typeof result.reply!=='string'||!result.reply.trim())throw Error('AI returned an empty answer');
- thinking.textContent=result.reply;messages.push({role:'user',text:q},{role:'model',text:result.reply});messages=messages.slice(-20);persist();
+ thinking.textContent=result.reply;messages.push({role:'user',text:q},{role:'model',text:result.reply});messages=messages.slice(-10);
 }catch(e){thinking.remove();err.textContent=e.name==='AbortError'?'Connection timed out. Try again.':(e.message||'Connection failed.');}
 finally{busy=false;send.disabled=false;input.focus();}}
 window.ReCompAI={ask};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();

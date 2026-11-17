@@ -380,6 +380,7 @@ button, [role="button"], summary { touch-action: manipulation; }
 @media(max-width:420px){#side .nv>span:not(.pill){font-size:9px!important;} .wst{gap:5px;} .wst>div{padding:8px 6px;} }
 </style>
 <link rel="stylesheet" href="./enhancements.css">
+<link rel="stylesheet" href="./phone-layout.css?v=15">
 </head>
 <body class="loading">
 <nav id="side" aria-label="Main menu"></nav><div id="scrim"></div>
@@ -537,14 +538,14 @@ button, [role="button"], summary { touch-action: manipulation; }
 <input id="rc4-token" type="password" autocomplete="off" placeholder="Paste your COACH_ACCESS_TOKEN">
 <p id="rc4-save-status" class="rc4-tip" role="status">Token will be saved locally on this device.</p>
 <button class="btn" type="button" id="rc4-forget-token">Forget saved token</button>
-<label class="rc4-consent"><input type="checkbox" id="rc4-share"> Share my 7-day nutrition summary and up to 8 recent food entries with AI for this chat</label>
-<p id="rc4-preview" class="rc4-tip">No tracker data is sent unless checked.</p>
-<button class="btn" type="button" id="rc4-clear">Clear chat history on this device</button>
+<label class="rc4-consent"><input type="checkbox" id="rc4-share" checked> Share my last 7 days of food logs and nutrition totals with AI (on by default; uncheck anytime)</label>
+<p id="rc4-preview" class="rc4-tip">By default, your recent food entries and 7-day nutrition summary are sent only when you ask AI a question. Uncheck to stop sharing.</p>
+<p class="rc4-tip">Chat clears when you leave and reopen AI Coach. Conversation history is not stored on this device.</p>
 </div><div class="chips" id="cchips"></div>
   <div id="cchat" aria-live="polite"></div>
   <div class="look" style="margin-top:10px"><input id="cq" placeholder="Ask about meals, workouts or training" aria-label="Question for the coach" autocomplete="off"><button class="btn pri" id="csend">Ask</button></div>
   <p class="err" id="cerr" role="alert"></p>
-  <p class="note">AI can make mistakes. This is general fitness education, not medical advice. Chat text is stored only on this device; messages and any opted-in summary are sent to Google Gemini through your Worker when you submit a question. On Google’s free tier, submitted content may be used to improve its products. Do not share sensitive medical details.</p></section>
+  <p class="note">AI can make mistakes. This is general fitness education, not medical advice. Chat history is not saved on this device; your current question and any enabled food summary are sent to Google Gemini through your Worker when you submit a question. On Google’s free tier, submitted content may be used to improve its products. Do not share sensitive medical details.</p></section>
 
 <section class="win c8" data-pg="journal"><a class="lk" href="#prefs" style="display:block;margin-bottom:10px">‹ Back to Profile</a><h2 class="t" id="jt">Daily journal</h2>
   <div class="grid">

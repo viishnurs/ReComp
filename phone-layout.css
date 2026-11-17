@@ -1,0 +1,89 @@
+/* ReComp v15 responsive layout repair. Loaded last, after previous styles. */
+html{overflow-x:clip;max-width:100%;-webkit-text-size-adjust:100%}
+body{min-width:0;max-width:100%;overflow-x:clip}
+main{min-width:0;width:100%;max-width:520px!important;margin-inline:auto;padding-inline:max(12px,env(safe-area-inset-left,0px)) max(12px,env(safe-area-inset-right,0px))!important;padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important}
+.grid12,.grid12>.win,.grid12>section,[data-pg],.ins,.pm,.tw,.tws,.nuv,.sbody,.sh,.row,.rc3-row,.rc3-entry,.rc3-copy,.rc3-metric,.rc6-hero,.rc6-hero-core,.rc6-ring-description,.rc9-meal-content,.rc4-config{min-width:0;max-width:100%;box-sizing:border-box}
+.grid12{grid-template-columns:repeat(12,minmax(0,1fr))!important;gap:12px!important}
+.grid12>.win,.grid12>.rc3-box,.grid12>.rc9-widget{grid-column:1/-1!important}
+.grid12>.win.c3:not([hidden]){grid-column:span 6!important}
+.win{overflow-wrap:anywhere;overflow:hidden}
+.win input,.win textarea,.win select,.win button{max-width:100%;box-sizing:border-box}
+.win .grid,.win .rc3-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.win .grid>*,.win .rc3-grid>*,.win .sg>*,.win .two>*,.win .qa>*{min-width:0}
+.win label,.win h2,.win h3,.win p,.win small,.win .sub,.win b,.win strong,.win span{overflow-wrap:anywhere}
+.win button,.win .btn{white-space:normal;overflow-wrap:anywhere;line-height:1.25;text-align:center;height:auto;min-height:40px}
+.win .two,.win .qa,.win .rc3-pills,.win .rc3-cover{flex-wrap:wrap}
+.win .two>.btn,.win .rc3-pills>button{flex:1 1 125px}
+.win .sh{min-width:0;flex-wrap:wrap;align-items:center}.win .sh .t2{flex:1 1 auto;min-width:0}
+.win .row{flex-wrap:wrap;align-items:center}.win .row>*{min-width:0}
+/* Bottom navigation: equal-width tappable targets, centered labels, safe area. */
+#side{position:fixed!important;top:auto!important;left:50%!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;transform:translateX(-50%)!important;width:min(520px,calc(100% - 20px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)))!important;max-width:520px!important;height:70px!important;display:flex!important;align-items:stretch!important;justify-content:space-around!important;gap:2px!important;padding:5px 5px!important;overflow:hidden!important;border-radius:23px!important;box-sizing:border-box;z-index:70!important}
+#side .nv{flex:1 1 0!important;width:0!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;overflow:hidden!important;display:none;align-items:center!important;justify-content:center!important;padding:5px 1px!important;gap:4px!important;border-radius:16px!important;line-height:1.1!important}
+#side .nv[data-p="home"],#side .nv[data-p="nutrition"],#side .nv[data-p="twin"],#side .nv[data-p="goals"],#side .nv[data-p="discover"],#side .nv[data-p="prefs"]{display:flex!important}
+#side #rc4-nav{display:none!important}
+#side .nv .ic,#side .nv svg{width:20px!important;height:20px!important;flex-shrink:0}
+#side .nv .tx,#side .nv span:not(.pill){width:100%;max-width:100%!important;display:block;text-align:center!important;font-size:clamp(8px,2.45vw,10px)!important;line-height:1.05!important;white-space:normal!important;overflow-wrap:normal!important;word-break:normal!important;letter-spacing:-.02em!important}
+#side .nv.on::before{top:2px!important}
+/* Dashboard hero: prevent text and progress-ring collisions. */
+#rc6-home{width:100%}.rc6-hero{width:100%;padding:clamp(15px,4vw,23px)!important}
+.rc6-hero h2{font-size:clamp(21px,6vw,31px)!important;line-height:1.18!important;overflow-wrap:anywhere}
+.rc6-hero-core{display:grid!important;grid-template-columns:minmax(0,100px) minmax(0,1fr)!important;gap:12px!important;padding:12px!important;align-items:center!important}
+.rc6-ring,.rc6-ring svg{width:96px!important;height:96px!important;max-width:100%!important}
+.rc6-ring-description{min-width:0}.rc6-ring-description b{font-size:clamp(12px,3.6vw,15px)!important}.rc6-ring-description p,.rc6-ring-description em{line-height:1.4!important;overflow-wrap:anywhere}
+.rc6-ctas{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rc6-ctas a{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.rc6-week{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:4px!important}.rc6-week-day .bubble{width:100%;min-width:0;max-width:100%}
+/* Statistics / digital twin cards: let long labels and values wrap. */
+.stk,.wst,.tws,.mg4,.nuv,.mac,.mic{min-width:0;max-width:100%}
+.wst{grid-template-columns:repeat(3,minmax(0,1fr))!important}.wst>div{min-width:0;padding:9px!important}.wst b{white-space:normal!important;font-size:clamp(13px,4vw,17px)!important}
+.tws{grid-template-columns:repeat(2,minmax(0,1fr))!important}.tw{min-width:0;overflow-wrap:anywhere}.tw b{font-size:clamp(15px,4.5vw,20px)}
+.stk{flex-wrap:wrap}.stk>div{min-width:0;flex:1 1 110px}
+.nuv{grid-template-columns:repeat(2,minmax(0,1fr))}.mic{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tbl{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}.tbl th,.tbl td{white-space:normal;overflow-wrap:anywhere}
+/* Strength builder: fixed table layout and usable input widths; horizontal scroll only within sets. */
+#rc3-gym,#rc3-gymhistory,#rc3-transform,#rc3-progressphotos{max-width:100%;overflow:hidden}
+#rc3-sets{max-width:100%;min-width:0}
+#rc3-sets>.ins{max-width:100%;min-width:0;padding:10px!important}
+#rc3-sets .rc3-row{gap:8px;flex-wrap:wrap}
+#rc3-sets .rc3-row b{flex:1 1 100px;min-width:0}
+#rc3-sets .rc3-sets{width:100%!important;max-width:100%;table-layout:fixed;border-collapse:collapse}
+#rc3-sets .rc3-sets th,#rc3-sets .rc3-sets td{padding:6px 3px!important;min-width:0;vertical-align:middle}
+#rc3-sets .rc3-sets th:first-child,#rc3-sets .rc3-sets td:first-child{width:12%}
+#rc3-sets .rc3-sets th:nth-child(2),#rc3-sets .rc3-sets td:nth-child(2){width:26%}
+#rc3-sets .rc3-sets th:nth-child(3),#rc3-sets .rc3-sets td:nth-child(3){width:43%}
+#rc3-sets .rc3-sets th:last-child,#rc3-sets .rc3-sets td:last-child{width:19%}
+#rc3-sets .rc3-sets input{min-height:38px!important;min-width:0!important;width:100%!important;padding:6px 4px!important;font-size:16px!important;text-align:center}
+#rc3-sets .rc3-sets button{min-width:0!important;width:100%!important;min-height:38px;padding:4px!important}
+.rc3-entry{min-width:0;flex-wrap:wrap;align-items:flex-start}.rc3-entry .rc3-copy{flex:1 1 150px;min-width:0;overflow-wrap:anywhere}.rc3-entry .btn{flex:0 1 auto}
+.rc3-metric strong{font-size:clamp(17px,5vw,23px)!important;overflow-wrap:anywhere}
+.rc3-photos{grid-template-columns:repeat(3,minmax(0,1fr))!important}.rc3-photo{min-width:0;overflow:hidden}.rc3-photo img{max-width:100%}
+.rc3-chart{max-width:100%;height:auto}
+/* Nutrition: remove only the Macro breakdown visual card; keep underlying data and fibres. */
+#k-macro{display:none!important}
+/* Make micronutrient summary readable in Statistics without horizontal collision. */
+#mtot,.mb,#wk,#k-sr{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#mtot .mb .row{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+#mtot .mb .row>*{min-width:0;max-width:100%;font-size:12px!important}
+#mtot .mb .bar{width:100%;max-width:100%;overflow:hidden}
+/* Dialogs/forms: no sideways viewport expansion. */
+.res,.calc,.adv,.ins,.pm,.sg,.look,.qa,.rc4-config{min-width:0;max-width:100%}
+.look input{min-width:0;flex:1 1 auto}
+#cchat .msg{max-width:100%;overflow-wrap:anywhere;word-break:break-word}
+@media(max-width:390px){
+  main{padding-inline:10px!important}
+  .grid12{gap:10px!important}.win{padding:13px!important}
+  .win .rc3-grid,.win .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #rc3-gym .rc3-grid,#rc3-transform .rc3-grid,#rc3-progressphotos .rc3-grid{grid-template-columns:1fr!important}
+  #rc3-gym .rc3-pills>button{flex:1 1 100px}
+  .rc6-hero-core{grid-template-columns:80px minmax(0,1fr)!important;gap:9px!important;padding:9px!important}
+  .rc6-ring,.rc6-ring svg{width:78px!important;height:78px!important}
+  .rc6-ring strong{font-size:22px!important}.rc6-ring small{top:54px!important;font-size:9px!important}
+  .rc6-ring-description p,.rc6-ring-description em{font-size:10px!important}
+  .tws,.nuv{grid-template-columns:1fr!important}
+  #side{width:calc(100% - 12px)!important;height:66px!important;padding:4px!important}
+}
+@media(max-width:330px){#side .nv .tx,#side .nv span:not(.pill){font-size:8px!important}.rc6-ctas{grid-template-columns:1fr!important}.wst{grid-template-columns:1fr!important}}
+/* Micronutrient detail inside Nutrition and Statistics: predictable rows. */
+#k-nut .mic,#res .mic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px;row-gap:5px;min-width:0}
+#k-nut .mic>div,#res .mic>div{display:flex;min-width:0;flex-wrap:wrap;gap:3px 8px;justify-content:space-between}
+#k-nut .mic em,#res .mic em{overflow-wrap:anywhere;white-space:normal}
+@media(max-width:375px){#k-nut .mic,#res .mic{grid-template-columns:1fr!important}}
